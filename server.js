@@ -5,7 +5,7 @@ let app = express();
 const path = require('path');
 const port = process.env.PORT || 8000;
 
-let getAll = []; let getOne = []; let getUser = [];
+let getAll = []; let getOne = []; let createUser = []; let getUser = [];
 let outfile = path.join(__dirname+'/storage.json');
 console.log(outfile);
 
@@ -40,6 +40,21 @@ for(let i = 0; i < getOne.length; i++){
 })
 
 });
+
+//Create new user
+app.post('/users', function(req, res){
+fs.readFile(outfile, "utf8", function(err, data){
+if(err){throw err;}
+createUser = JSON.parse(data);
+
+createUser.push(req.body);
+console.log(createUser);
+fs.writeFileSync(outfile, JSON.stringify(createUser), function(err){
+    if(err){throw err;}
+    res.sendStatus(200);
+})
+})
+})
 
 app.listen(port, function() {
     console.log('Listening on', port);
