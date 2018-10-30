@@ -2,10 +2,11 @@ const express = require("express");
 let bodyParser = require('body-parser');
 let fs = require('fs');
 let app = express();
+app.use(bodyParser.json());
 const path = require('path');
 const port = process.env.PORT || 8000;
 
-let getAll = []; let getOne = []; let createUser = []; let getUser = [];
+let getAll = []; let getOne = []; let getUser = [];
 let outfile = path.join(__dirname+'/storage.json');
 console.log(outfile);
 
@@ -43,18 +44,29 @@ for(let i = 0; i < getOne.length; i++){
 
 //Create new user
 app.post('/users', function(req, res){
+ //   console.log(req);
+/*let newUser = {
+    "name": req.body.name,
+    "emai": req.body.email,
+    "state": req.body.state
+}
+*/
 fs.readFile(outfile, "utf8", function(err, data){
+   
 if(err){throw err;}
-createUser = JSON.parse(data);
+let createUser = JSON.parse(data);
 
 createUser.push(req.body);
-console.log(createUser);
-fs.writeFileSync(outfile, JSON.stringify(createUser), function(err){
+console.log(req.body);
+fs.writeFile(outfile, JSON.stringify(createUser), function(err){
     if(err){throw err;}
+  
     res.sendStatus(200);
 })
 })
 })
+
+
 
 app.listen(port, function() {
     console.log('Listening on', port);
