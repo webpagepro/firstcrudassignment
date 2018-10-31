@@ -85,6 +85,27 @@ res.sendStatus(400);
 
 });
 
+// Delete user
+app.get(outfile, function(req, res){
+    fs.readFile(outfile, "utf8", function(err, data){
+    let checkUser = JSON.parse(data);
+    for(let i = 0; i < checkUser.length; i++){
+       if(checkUser[i].name === req.params.name){
+           checkUser[i] = req.body;
+           fs.writeFile(outfile, "utf8", JSON.stringify(checkUser), function(err){
+    console.log("updated");
+    res.sendStatus(200);
+           });
+    
+           return;
+       }
+    }
+    res.sendStatus(400);
+    })
+    
+    });
+
+    
 
 app.listen(port, function() {
     console.log('Listening on', port);
