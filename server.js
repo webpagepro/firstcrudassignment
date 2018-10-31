@@ -57,7 +57,6 @@ if(err){throw err;}
 let createUser = JSON.parse(data);
 
 createUser.push(req.body);
-console.log(req.body);
 fs.writeFile(outfile, JSON.stringify(createUser), function(err){
     if(err){throw err;}
   
@@ -66,6 +65,25 @@ fs.writeFile(outfile, JSON.stringify(createUser), function(err){
 })
 })
 
+// Update user
+app.get(outfile, function(req, res){
+fs.readFile(outfile, "utf8", function(err, data){
+let checkUser = JSON.parse(data);
+for(let i = 0; i < checkUser.length; i++){
+   if(checkUser[i].name === req.params.name){
+       checkUser[i] = req.body;
+       fs.writeFile(outfile, "utf8", JSON.stringify(checkUser), function(err){
+console.log("updated");
+res.sendStatus(200);
+       });
+
+       return;
+   }
+}
+res.sendStatus(400);
+})
+
+});
 
 
 app.listen(port, function() {
